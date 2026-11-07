@@ -1,0 +1,11 @@
+delivery_id,order_id,delivery_status,delivery_city 
+D001,O101,Delivered,Delhi 
+D002,O102,Shipped,Noida 
+D003,O103,Pending,Mumbai 
+D004,O104,Delivered,Delhi 
+D005,O105,Shipped,Pune 
+D006,O106,Pending,Unknown 
+D007,O107,Delivered,Delhi 
+D008,O108,Shipped,Bengaluru 
+D009,O109,Pending,Noida 
+D010,O110,Delivered,Mumbai

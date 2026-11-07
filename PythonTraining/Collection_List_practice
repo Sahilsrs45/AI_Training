@@ -1,0 +1,23 @@
+fruits=["mango","guava","orange","banana","apple"]
+print("all at a time")
+print(fruits)
+
+print("in sequence")
+
+for fruit in fruits:
+    print(fruit)
+    
+print(fruits[1:4])    
+
+print(fruits[::-1])
+
+fruits[1]="kiwi"
+
+print(fruits)
+print(fruits[1:1])
+
+print(fruits.__len__())
+
+fruits.append("pomogranate")
+
+print(fruits)

@@ -1,0 +1,12 @@
+order_id,customer_id,product_name,quantity,unit_price,order_date 
+O101,C001,Laptop,1,55000,2026-07-15 
+O102,C002,Mouse,2,700,2026-07-15 
+O103,C003,Keyboard,1,1500,2026-07-15 
+O104,C001,Monitor,2,12000,2026-07-15 
+O105,C004,Headphones,1,2500,2026-07-15 
+O106,,Laptop Bag,1,1800,2026-07-15
+O107,C005,Mouse,3,700,2026-07-15 
+O108,C006,Keyboard,2,1500,2026-07-15 
+O108,C006,Keyboard,2,1500,2026-07-15 
+O109,C002,Webcam,1,3500,2026-07-15 
+O110,C003,Monitor,1,12000,2026-07-15

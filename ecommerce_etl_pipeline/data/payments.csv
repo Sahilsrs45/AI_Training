@@ -1,0 +1,9 @@
+payment_id,order_id,payment_status,payment_method,payment_date 
+P1001,O101,Success,Credit Card,2026-07-15 
+P1002,O102,Success,UPI,2026-07-15 
+P1003,O103,Failed,Debit Card,2026-07-15 
+P1004,O104,Success,Net Banking,2026-07-15 
+P1005,O105,Success,UPI,2026-07-15 
+P1006,O106,Failed,Credit Card,2026-07-15 
+P1007,O107,Success,UPI,2026-07-15 
+P1008,O108,Success,Debit Card,2026-07-15

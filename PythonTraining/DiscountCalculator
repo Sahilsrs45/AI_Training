@@ -1,0 +1,11 @@
+amount=int(input("Enter purchase amount "))
+
+if amount >5000 :
+    amount+=amount*0.2
+elif amount >2000 & amount<5000 :
+    amount+=amount*0.1
+    
+else :
+    amount+=amount*0.05        
+
+print(f"Amount is :{amount}")    
