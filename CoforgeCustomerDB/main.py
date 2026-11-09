@@ -54,3 +54,58 @@ def addCustomer(Customer: CustomerCreate):
  
     finally:
         db.close()
+        
+# Update Customer
+@app.put("/customers/{CustomerId}", response_model=CustomerResponse)
+def updateCustomer(CustomerId: int, Customer: CustomerCreate):
+    db = SessionLocal()
+
+    try:
+        updated_customer = service.update_customer(
+            db,
+            CustomerId,
+            Customer
+        )
+
+        if updated_customer is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Customer not found"
+            )
+
+        return updated_customer
+
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Customer email already exists"
+        )
+
+    finally:
+        db.close()
+        
+        
+# Delete Customer
+@app.delete("/customers/{CustomerId}")
+def deleteCustomer(CustomerId: int):
+    db = SessionLocal()
+
+    try:
+        deleted = service.delete_customer(
+            db,
+            CustomerId
+        )
+
+        if not deleted:
+            raise HTTPException(
+                status_code=404,
+                detail="Customer not found"
+            )
+
+        return {
+            "message": f"Customer {CustomerId} deleted successfully"
+        }
+
+    finally:
+        db.close()                
