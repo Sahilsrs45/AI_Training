@@ -1,0 +1,3 @@
+payment_id,order_id,customer_id,customer_name,product_name,total_amount,payment_method,payment_status
+P1003,O103,C003,Rahul Singh,Keyboard,1500,Debit Card,Failed
+P1006,O106,,Unknown Customer,Laptop Bag,1800,Credit Card,Failed
