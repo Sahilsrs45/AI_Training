@@ -5,7 +5,7 @@ from sqlalchemy import (
     String,
     Numeric,
     Boolean,
-    CheckConstraint
+  
 )
 
 from config.database import Base
