@@ -1,0 +1,36 @@
+Virtual environment
+venv/
+.venv/
+env/
+ 
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+ 
+# Environment variables and API keys
+.env
+.env.*
+!.env.example
+ 
+# IDE settings
+.vscode/
+.idea/
+ 
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+ 
+# Logs
+*.log
+ 
+# OS generated files
+.DS_Store
+Thumbs.db
+ 
+# Build and distribution
+build/
+dist/
+*.egg-info/
+ 
