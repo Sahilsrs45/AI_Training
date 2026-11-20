@@ -1,0 +1,87 @@
+# Environment variables
+.env
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# SQLite databases
+*.sqlite3
+*.db
+
+# FastAPI temporary files
+*.pid
+
+# MyPy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Pyre
+.pyre/
+
+# LangChain / LangGraph generated caches
+.langchain/
+.langgraph/
+
+# Secrets
+*.pem
+*.key
+*.crt
+*.pfx
+
+# OS files
+.DS_Store

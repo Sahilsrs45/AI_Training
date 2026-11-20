@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
  
 # project folder locations
-BASE_DIR= Path(__file__).resolve().parent
+BASE_DIR= Path(__file__).resolve().parent  #BASE_DIR is the path object . __file__ = gives location of currently executing py file      
 print(f"Base Directory: {BASE_DIR}")
  
 DATA_DIR=BASE_DIR/"data"
@@ -188,152 +188,150 @@ def clean_payments(payments: pd.DataFrame) -> pd.DataFrame:
  
     return payments
 
-#join the 4 datasets(all)
 def join_data(
-    customers:pd.DataFrame,
-    orders:pd.DataFrame,
-    payments:pd.DataFrame,
-    deliveries:pd.DataFrame
+    customers: pd.DataFrame,
+    orders: pd.DataFrame,
+    payments: pd.DataFrame,
+    deliveries: pd.DataFrame
 ) -> pd.DataFrame:
-    """Join customers , orders , payments and deliveries"""
-    combined_data=orders.merge(
+
+    combined_data = orders.merge(
         customers,
-        on="customer_id",
+        on = "customer_id",
+        how = "left"
+    )
+
+    combined_data = combined_data.merge(
+        payments,
+        on="order_id",
         how="left"
-        
     )
-    
-    combined_data=combined_data.merge(
-            payments,
-            on="order_id",
-            how="left"
-            
-        )
-    
-    combined_data=combined_data.merge(
-            deliveries,
-            on="order_id",
-            how="left"
-            
-        )
-    
-    combined_data["customer_name"]=(
+
+    combined_data = combined_data.merge(
+        deliveries,
+        on="order_id",
+        how="left"
+    )
+
+    combined_data["customer_name"] = (
         combined_data["customer_name"]
-        .fillna("Unknown Customer")
+        .fillna("Unknown customer")
     )
-    combined_data["city"]=(
+
+    combined_data["city"] = (
             combined_data["city"]
             .fillna("Unknown")
-        )
-    
-    combined_data["payment_status"]=(
+    )
+
+    combined_data["payment_status"] = (
             combined_data["payment_status"]
             .fillna("Unknown")
-        )
-    
-    combined_data["delivery_status"]=(
+    )
+
+    combined_data["delivery_status"] = (
             combined_data["delivery_status"]
             .fillna("Unknown")
-        )
+    )
+
     return combined_data
 
-#step 5 generate total order report
-def generate_total_orders_report(combined_data:pd.DataFrame)-> pd.DataFrame:
-    """Calculate total number of unique orders"""
-    
-    total_orders=combined_data["order_id"].nunique()
-    
+# Generate total orders report
+
+def generate_total_orders_report(combined_data: pd.DataFrame) -> pd.DataFrame:
+    """Calculate total number of unique orders."""
+
+    total_orders = combined_data["order_id"].nunique()
+
     return pd.DataFrame(
         {
-            "metric":["Total Orders"],
-            "value":[total_orders]
+            "metric": ["Total Orders"],
+            "value": [total_orders]
         }
     )
-    
-    
-    #generate total revenue report
-    
-def generate_total_revenue_report(combined_data:pd.DataFrame)->pd.DataFrame:
-    """Calculate revenue from successful payments"""
-    successful_orders=combined_data[
-        combined_data["payment_status"]=="Success"
-        
+
+# Generate total revenue report
+
+def generate_total_revenue_report(combined_data: pd.DataFrame) -> pd.DataFrame:
+    """Calculate revenue from successful payments."""
+
+    successful_orders = combined_data[
+        combined_data["payment_status"] == "Success"
     ]
-    total_revenue=successful_orders["total_amount"].sum()
-    
+
+    total_revenue = successful_orders["total_amount"].sum()
+
     return pd.DataFrame(
-            {
-                "metric":["Total Orders"],
-                "value":[total_revenue]
-            }
-        )
+        {
+            "metric": ["Total Revenue"],
+            "value": [total_revenue]
+        }
+    )    
 
+#generate top products report
 
-
- #generate top productrs report
-
-def generate_top_product_report(
-    combined_data:pd.DataFrame
-)->pd.DataFrame:
+def generate_top_products(
+        combined_data: pd.DataFrame
+) -> pd.DataFrame:
     """Find the top 10 selling products."""
 
-    successful_orders=combined_data[
-        combined_data["payment_status"]=="Success"
-    ]       
+    successful_orders = combined_data[
+        combined_data["payment_status"] == "Success"
+    ]
 
-    top_products=(
+    top_products = (
         successful_orders
-        .groupby("product_name",as_index=False)
+        .groupby("product_name",as_index = False)  #as_index = False will not include index column
         .agg(
-            total_quantity_sold=("quantity","sum"),
-            total_product_revenue=("total_amount","sum")
+            total_quantity_sold = ("quantity","sum"),
+            total_product_revenue = ("total_amount","sum")
         )
         .sort_values(
-            by="total_quantity_sold",
-            ascending=False
-        ).head(10)
+            by = "total_quantity_sold",
+            ascending = False
+        )
+        .head(10)
     )
     return top_products
 
-#generate top customers report
-
+#generate top customers
 def generate_top_customers_report(
-        combined_data:pd.DataFrame
+        combined_data: pd.DataFrame
 )-> pd.DataFrame:
-    """Find the top 10 customers by total spending"""
+    """Find the top 10 customers by total spending."""
 
-    successful_orders=combined_data[
-        combined_data["payment_status"]=="Success"
+    successful_orders = combined_data[
+        combined_data["payment_status"] == "Success"
     ]
 
-    top_customers=(
+    top_customers = (
         successful_orders
         .groupby(
             ["customer_id","customer_name"],
-            as_index=False
+            as_index = False
         )
         .agg(
-            total_orders=("order_id","nunique"),
-            total_spent=("total_amount","sum")
+            total_orders = ("order_id","nunique"),
+            total_spent = ("total_amount","sum")
         )
         .sort_values(
             by="total_spent",
-            ascending=False
+            ascending = False
         )
         .head(10)
     )
     return top_customers
 
 #generate failed payments report
-def generate_failed_payments_report(
-        combined_data:pd.DataFrame
-)->pd.DataFrame:
-    """Create a report containing failed payments"""
-    failed_payments=combined_data[
-        combined_data["payment_status"]=="Failed"
+def generate_failed_payment_report(
+    combined_data: pd.DataFrame
+)-> pd.DataFrame:
+    """create a report containing failed payments"""
+
+    failed_payments = combined_data[
+        combined_data["payment_status"] == "Failed"
     ]
 
-    required_columns=[
+    required_columns = [
         "payment_id",
         "order_id",
         "customer_id",
@@ -343,190 +341,193 @@ def generate_failed_payments_report(
         "payment_method",
         "payment_status"
     ]
+
     return failed_payments[required_columns]
 
-
-#save reports to cxv files
-def save_reports(
-        total_orders_report:pd.DataFrame,
-        total_revenue_report:pd.DataFrame,
-        top_products_report:pd.DataFrame,
-        top_customers_report:pd.DataFrame,
-        failed_payments_report:pd.DataFrame
-)   -> None:
-    """Save all generated reports as csv files."""
-
-    total_orders_report.to_csv(
-        REPORT_DIR/"total_orders.csv",
-        index=False
-    ) 
-
-    total_revenue_report.to_csv(
-        REPORT_DIR/"total_revenue.csv",
-        index=False
-    )
-
-    top_products_report.to_csv(
-        REPORT_DIR / "total_products.csv",
-        index=False
-    )
-    top_customers_report.to_csv(
-        REPORT_DIR/"total_customers.csv",
-        index=False
-    )
-    failed_payments_report.to_csv(
-        REPORT_DIR/"failed_payments.csv",
-        index=False
-    )
-
-
 def create_sales_line_chart(combined_data):
-        sales=combined_data[combined_data["payment_status"]=="Success"
-                            ].copy()
 
-        #sales["order_date"]=pd.to_datetime(plt.figure(figsize=(10,5)))
-        sales=sales.dropna(subset=["order_date"])
-        daily_sales=(
-            sales.groupby("order_date")["total_amount"]
-            .sum()
-            .sort_index()
-        )
+    sales = combined_data[
+        combined_data["payment_status"] == "Success"
+    ].copy()
 
-        plt.figure(figsize=(10,5))    
-        plt.plot(
-            daily_sales.index,
-            daily_sales.values,
-            marker="o",
-            color="blue"
-            
-        )
-        plt.title("Daily sales revenue")
-        plt.xlabel("Order Date")
-        plt.ylabel("Revenue")
-        plt.xticks(rotation=45)
-        plt.grid(True)
+    sales = sales.dropna(subset=["order_date"])
 
-        plt.tight_layout()
-        plt.savefig(REPORT_DIR/"sales_line_chart.png")
-        plt.close()
-
-        return create_sales_line_chart
-
-#pie chart payment status
-def create_payment_pie_chart(combined_data):
-    payment_counts=(
-        combined_data
-        .drop_duplicates(subset=["payment_id"])
-        ["payment_status"]
-        .value_counts()
+    daily_sales = (
+        sales.groupby("order_date")["total_amount"]
+        .sum()
+        .sort_index()
     )
 
+    plt.figure(figsize = (10,5))
+
+    plt.plot(
+        daily_sales.index,
+        daily_sales.values,
+        marker = "o",
+        color = "blue",
+    )
+
+    plt.title("Daily Sales Revenue")
+    plt.xlabel("Order Date")
+    plt.ylabel("Revenue")
+    plt.xticks(rotation = 45)
+    plt.grid(True)
+
+    plt.tight_layout()
+
+    plt.savefig(REPORT_DIR / "sales_line_chart.png")
+    plt.close()
+    
+#Pie chart - payment status
+#this chart displays the percentage of successful , failed and pending status
+def create_payment_pie_chart(combined_data):
+ 
+    payment_counts=(
+        combined_data.drop_duplicates(subset=["payment_id"])
+        ["payment_status"].value_counts()
+    )
+ 
     payment_counts_1=(
-            combined_data["payment_status"]
-            .value_counts()
-        )
-
-    print("payment status counts:\n",payment_counts)
-    print("payment status counts 1:\n",payment_counts_1)
+        combined_data["payment_status"].value_counts()
+    )
+ 
+    print("Payment Status Counts: \n",payment_counts)
+    print("Payment Status Counts: \n",payment_counts_1)
+ 
     plt.figure(figsize=(7,7))
-
+ 
     plt.pie(
         payment_counts.values,
         labels=payment_counts.index,
         autopct="%1.1f%%",
         startangle=90
     )
-
-    plt.title("payment status distribution")
+ 
+    plt.title("Payment Status Distribution")
+ 
     plt.tight_layout()
+ 
     plt.savefig(REPORT_DIR/"payment_pie_chart.png")
     plt.close()
-#Main 
+ 
+ 
 
-def run_etl_pipeline()->None:
-    """Execute the complete ETL pipeline"""
+#Save reports to CSV files
+def save_reports(
+        total_orders_report: pd.DataFrame,
+        total_revenue_report: pd.DataFrame,
+        top_products_report: pd.DataFrame,
+        top_customers_report: pd.DataFrame,
+        failed_payments_report: pd.DataFrame
+)-> None:
+    """Save all generated reports as CSV files."""   
 
-    print("Starting E-Commerce ETL pipeline")
+    total_orders_report.to_csv(
+        REPORT_DIR / "total_orders.csv",
+        index = False
+    )
 
+    total_revenue_report.to_csv(
+        REPORT_DIR / "total_revenue.csv",
+        index = False
+    ) 
+
+    top_products_report.to_csv(
+        REPORT_DIR / "top_products.csv",
+        index = False
+    )
+
+    top_customers_report.to_csv(
+        REPORT_DIR / "top_customers.csv"
+    )
+
+    failed_payments_report.to_csv(
+        REPORT_DIR / "failed_payments.csv"
+    )
+
+
+
+#------------MAIN ETL PIPELINE-------------
+
+def run_etl_pipeline() -> None:
+    """Execute the complete ETL Pipeline."""
+
+    print("Starting E-commerce ETL Pipeline...")
     create_folder()
-    print("Step 1: Extrzcting data...")
+    print("Step 1: Extracting data...")
 
-    customers,orders,payments,deliveries=extract_data()
+    customers, orders,payments,deliveries = extract_data()
 
     print("Step 2: Cleaning customer data...")
-    customers=clean_customers(customers)
+    customers = clean_customers(customers)
 
     print("Step 3: Cleaning order data...")
-    orders=clean_orders(orders)
+    orders = clean_orders(orders)
 
-    print("Step 4: Cleaning payments data...")
-    payments=clean_payments(payments)
+    print("Step 4: Cleaning payment data...")
+    payments = clean_payments(payments)
 
     print("Step 5: Cleaning delivery data...")
-    deliveries=clean_deliveries(deliveries)
+    deliveries = clean_deliveries(deliveries)
 
     print("Step 6: Joining datasets...")
 
-    combined_data=join_data(
+    combined_data = join_data(
         customers,
         orders,
         payments,
         deliveries
     )
-    print(combined_data)
 
-    print("Step 7: Generating reports")
-    total_orders_report=generate_total_orders_report(
+    print("Step 7: Generating reports...")
+
+    total_orders_report = generate_total_orders_report(
         combined_data
     )
+
     print(total_orders_report)
 
-    total_revenue_report=generate_total_revenue_report(
+    total_revenue_report = generate_total_revenue_report(
         combined_data
     )
+
     print(total_revenue_report)
 
-    top_products_report = generate_top_product_report(
-    combined_data
-    )
-
-    print(top_products_report)
-
-    top_customers_report=generate_top_customers_report(
-        combined_data
-    )
-    print(top_customers_report)
-
-
-    failed_payments_report=generate_failed_payments_report(
-        combined_data
-    )
-    print(failed_payments_report)
-
-    print("Step 8: Saving reports....")
-    save_reports(
-        total_orders_report,
-        total_revenue_report,
-        top_products_report,
-        top_customers_report,
-        failed_payments_report
-    )
-
-    print("\nETL pipeline completed successfully.")
-    print(f"Reports Folder :{REPORT_DIR}")
-    print(f"Database location: {DATABASE_PATH}")
-
-    create_sales_line_chart(combined_data)
-
-    create_payment_pie_chart(combined_data)
+    top_products = generate_top_products(
+            combined_data
+        )
     
+    print(top_products)
 
+    top_customers = generate_top_customers_report(
+                combined_data
+            )
+        
+    print(top_customers)
 
+    failed_payments = generate_failed_payment_report(
+                    combined_data
+                )
+            
+    print(failed_payments)
 
+    save_reports(
+    total_orders_report,
+    total_revenue_report,
+    top_products,
+    top_customers,
+    failed_payments
+    )   
 
-#Program staring point
-if __name__=="__main__":
+    print("Step 8:Visualization by Pie Chart and Line Chart")
+    line_chart = create_sales_line_chart(combined_data)
+    print(line_chart)
 
+    pie_chart = create_payment_pie_chart(combined_data)
+    print(pie_chart)
+     
+#Program starting point
+
+if __name__ == "__main__":
     run_etl_pipeline()
 
-   
