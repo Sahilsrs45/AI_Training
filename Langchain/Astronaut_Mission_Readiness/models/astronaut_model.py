@@ -13,7 +13,7 @@ class AstronautAnalysis(BaseModel):
     age_eligible:bool
     training_eligible:bool
     medical_eligible:bool
-    experience_eligible:bool
+    experience_eligible:bool2
     failed_checks:list[str]
     risk_level:str
          

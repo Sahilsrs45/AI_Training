@@ -650,27 +650,3 @@ top_stores = store_analysis.sort_values(
  
 print("Top 10 Performing Stores:")
 print(top_stores)
- 
-# Five-point management summary
- 
-print("\n========== MANAGEMENT SUMMARY ==========")
- 
-print("1. Top Revenue Product:")
-print(product_revenue.idxmax())
- 
-print("\n2. Highest Profit Region:")
-print(region_profit.idxmax())
- 
-print("\n3. Best Performing Sales Channel by Profit:")
- 
-channel_profit = sales.groupby("Sales_Channel")["Profit_INR"].sum()
-print(channel_profit.idxmax())
- 
-print("\n4. Highest Revenue City:")
- 
-city_revenue = sales.groupby("City")["Net_Revenue_INR"].sum()
-print(city_revenue.idxmax())
- 
-print("\n5. Average Customer Rating:")
- 
-print(round(sales["Customer_Rating"].mean(), 2))
